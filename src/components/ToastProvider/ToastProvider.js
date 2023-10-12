@@ -2,6 +2,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react"
@@ -40,6 +41,16 @@ function ToastProvider({ children }) {
     }),
     [toasts, dispatchToast, dismissToast]
   )
+
+  useEffect(() => {
+    const handleDismissToasts = (event) => {
+      if (event.code === "Escape") {
+        setToasts([])
+      }
+    }
+    window.addEventListener("keydown", handleDismissToasts)
+    return () => window.removeEventListener("keydown", handleDismissToasts)
+  }, [])
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
 }
